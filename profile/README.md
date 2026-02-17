@@ -1,135 +1,130 @@
 # Intent
 
-**Discord just mandated government ID verification and facial recognition to talk to your friends.**
+**Open-source communication platform. Private by design, not by promise.**
 
-**Your biometric data. Their servers. Forever. No opt-out.**
+Discord asks for your government ID. Slack sells your conversations to train AI. Telegram's encryption is opt-in and closed-source. Every major platform treats privacy as a feature toggle, not a foundation.
 
-We're building the alternative.
-
----
-
-## Why Intent Exists
-
-Private communication shouldn't require government surveillance.
-
-Discord crossed the line. Mandatory facial scans and ID uploads aren't security measures—they're a surveillance infrastructure masquerading as safety features.
-
-**Your face isn't a password. Your ID isn't a permission slip to talk to friends.**
-
-Intent exists because the right to private communication is non-negotiable.
+We're building what they won't.
 
 ---
 
-## What We're Building
+## What Intent Is
 
-A communication platform that respects:
+A real-time chat platform with voice, text, and community features — built from scratch with privacy and performance as architectural decisions, not marketing copy.
 
-- **Your privacy** - No government IDs, no facial recognition, no biometric harvesting
-- **Your resources** - Sub-80MB RAM idle (Discord: 400MB+)
-- **Your freedom** - Self-hostable, open clients, verifiable privacy claims
-- **Your time** - Sub-100ms voice latency, <10ms message delivery
+- **End-to-end encryption** for DMs and voice (MLS protocol, SRTP)
+- **Self-hostable** — run your own instance, own your data, federate with others
+- **Lightweight** — sub-80MB RAM idle, native desktop via Tauri
+- **Open protocol** — fully documented spec, anyone can build a client
+- **Bot-friendly** — SDKs mirror discord.js and discord.py patterns for easy migration
+- **WebRTC SFU voice** — low-latency, high-quality, no P2P mesh scaling problems
 
-**Discord without the surveillance, bloat, and closed-source opacity.**
+This isn't a Discord skin. It's a ground-up rethink of how community platforms should work.
 
 ---
 
-## The Vision
+## Architecture
 
-Communities are fleeing Discord. Not because they want to—because they have to.
+```
+Rust backend (Axum + PostgreSQL + Redis)
+  REST API + WebSocket gateway (MessagePack binary protocol)
+  WebRTC SFU voice (str0m, TURN/STUN relay)
+  64-bit permission bitfields, role-based access control
 
-We're not rebuilding Discord. We're building what Discord should have been:
+React 19 web client (TypeScript, Vite, Zustand, Tailwind)
+  Real-time via gateway, not polling
+  Dark theme, keyboard-driven
 
-- End-to-end encryption for DMs (MLS protocol)
-- WebRTC SFU for high-quality, low-latency voice
-- Open-source clients so you can verify privacy claims
-- Self-hosting so you control your data
-- Bot APIs compatible with Discord patterns (migration should be painless)
-- No venture capital pressure to monetize surveillance
+Bot SDKs
+  intent.js  — TypeScript, mirrors discord.js
+  intent.py  — Python, mirrors discord.py
 
-**Your server, your rules, your data.**
+Open protocol spec
+  Gateway opcodes, REST endpoints, rate limiting, voice signaling
+  OpenAPI 3.1 schema included
+```
+
+Everything except the server backend is MIT licensed. The protocol is fully open — build your own client, your own bot, your own tools.
 
 ---
 
 ## Current Status
 
-**Phase 1 MVP in active development.**
+**Phase 1 — core platform in active development.**
 
-We're cooking:
-- REST API + WebSocket gateway for real-time events
-- Voice channels with WebRTC SFU
-- Permission system, roles, channels, servers
-- Desktop client (Tauri) - lightweight and native
-- Bot SDKs (intent.js, intent.py) - discord.js/discord.py compatible
-- Discord migration toolkit - server structure import in 5 minutes
+| Component | Status |
+|-----------|--------|
+| REST API (servers, channels, messages, roles, invites) | Working |
+| WebSocket gateway (MessagePack, heartbeat, events) | Working |
+| Permission system (bitfield, role stacking, overrides) | Working |
+| Redis event streaming (real-time fan-out) | Working |
+| WebRTC SFU voice (str0m) | In progress |
+| Web client (React 19) | In progress |
+| Bot SDK — intent.js | In progress |
+| Bot SDK — intent.py | In progress |
+| Desktop client (Tauri) | Planned |
+| E2E encryption | Planned |
+| Federation | Planned |
 
-**Not ready for daily use yet.** Active development. Heavy iteration.
+Not ready for daily use yet. Building in the open.
 
 ---
 
-## Join the Movement
+## Why This Matters
 
-**We need you.**
+Communities shouldn't have to choose between features and privacy. Right now, every mainstream platform forces that tradeoff.
 
-Discord won't stop at ID verification. The precedent is set. The infrastructure is built. Next comes real-name policies, content scanning, social credit integration.
+Discord has the features. But it also has mandatory biometric verification, closed-source clients, 400MB+ RAM usage, and a business model that depends on locking you in.
 
-You can either watch it happen or help build the alternative.
+Matrix and XMPP have the privacy. But the UX gap is real — most communities won't migrate to something that feels like a downgrade.
 
-**What we need:**
-- **Frontend devs** - Desktop (Tauri), web clients
-- **Mobile devs** - Swift (iOS), Kotlin (Android)
-- **Bot developers** - Port your bots, help refine the SDK
-- **Security researchers** - Audit E2EE implementation, find vulnerabilities
-- **Community builders** - Spread the word, help communities migrate
-- **Documentation writers** - Guides, tutorials, API docs
+Intent closes that gap. Feature parity with Discord. Privacy guarantees you can verify. Performance that doesn't eat your RAM.
 
-**Can't code?**
-- Star the repos - visibility matters
-- Share with communities being forced off Discord
-- Test alpha releases
-- Report bugs, suggest features
+**You shouldn't need to read a terms of service update to know your conversations are private.**
+
+---
+
+## Get Involved
+
+Every repo has issues tagged and scoped for contributors. Each one has a CONTRIBUTING.md with the workflow, branching conventions, and code standards. CI runs automatically on PRs.
+
+| You are | You can |
+|---------|---------|
+| **Frontend dev** | Build the web client (React 19, TypeScript, Tailwind) |
+| **Systems dev** | Contribute to the protocol spec, audit the architecture |
+| **Bot developer** | Port your Discord bots, shape the SDK APIs |
+| **Security researcher** | Review the encryption design, find vulnerabilities |
+| **Designer** | Help define the UI/UX for a platform people actually want to use |
+| **Community leader** | Test with your community, give feedback on what matters |
+| **Anyone** | Star the repos, file issues, spread the word |
 
 ---
 
 ## Repositories
 
-- **[intent](https://github.com/IntentAi/intent)** - Project hub and documentation
-- **[intent-protocol](https://github.com/IntentAi/intent-protocol)** - Protocol specification
-- **[intent-clients](https://github.com/IntentAi/intent-clients)** - Desktop, web, mobile clients
-- **[intent.js](https://github.com/IntentAi/intent.js)** - JavaScript/TypeScript bot SDK
-- **[intent.py](https://github.com/IntentAi/intent.py)** - Python bot SDK
-- **[intent-migrate](https://github.com/IntentAi/intent-migrate)** - Discord migration toolkit
+| Repo | What it is | License |
+|------|-----------|---------|
+| **[intent](https://github.com/IntentAi/intent)** | Project hub, vision, documentation | MIT |
+| **[intent-protocol](https://github.com/IntentAi/intent-protocol)** | Full protocol spec — REST, gateway, voice, auth | MIT |
+| **[intent-clients](https://github.com/IntentAi/intent-clients)** | Web client (React 19 + TypeScript + Vite) | MIT |
+| **[intent.js](https://github.com/IntentAi/intent.js)** | TypeScript bot SDK (discord.js-compatible) | MIT |
+| **[intent.py](https://github.com/IntentAi/intent.py)** | Python bot SDK (discord.py-compatible) | MIT |
+| **[intent-migrate](https://github.com/IntentAi/intent-migrate)** | Discord migration toolkit | MIT |
 
-Server backend is proprietary (enables monetization via managed hosting). Clients, SDKs, and protocol specs are open source (MIT).
-
----
-
-## What We're NOT Doing
-
-- Collecting government IDs
-- Scanning faces for biometric data
-- Selling user data to advertisers
-- Building surveillance infrastructure disguised as safety features
-- Forcing users into walled gardens
-- Bloating with features nobody asked for
-
-**Privacy isn't a premium feature. It's the baseline.**
+Server backend is proprietary — enables sustainable development through managed hosting. Everything you interact with as a user, developer, or bot author is open source.
 
 ---
 
-## License
+## The Baseline
 
-Clients, SDKs, and protocol: **MIT License**
+- No government ID collection
+- No biometric scanning
+- No selling conversation data
+- No closed-source clients
+- No vendor lock-in
 
-Server backend: **Proprietary** (enables sustainable development through managed hosting)
+Privacy isn't a premium tier. It's the default.
 
 ---
 
-## Get Started
-
-**Star the repos. Watch for releases. Contribute if you can.**
-
-When the platform you rely on demands government IDs, you have two choices: comply or leave.
-
-**We're building the third option: own it yourself.**
-
-Discord doesn't get to own private communication. Not anymore.
+**Star the repos. Read the protocol. Pick an issue. Build with us.**
